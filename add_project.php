@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <title>web zero</title>
-        <link rel='stylesheet' href='css/bootstrap.css'/>
+        <link rel='stylesheet' href='css/bootstrap.min.css'/>
         <link rel='stylesheet' href='css/style.css'/>
         
     </head>
@@ -12,7 +12,7 @@
           <h1>Add Project</h1>
             <div class="row">
               <div class= "col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                     Name  
                  </div>
               
@@ -25,7 +25,7 @@
               </div>
      <div class="row">
               <div class= "col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                     StartDate  
                  </div>
               
@@ -37,7 +37,7 @@
             </div>
       <div class="row">
               <div class= "col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                     EndDate  
                  </div>
               
@@ -53,7 +53,7 @@
                 <div class="row">
 <!--
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 d-none d-md-block d-lg-none">
-                 <div class="os">
+                 <div class="label">
                      visible only at medium 
                  </div>
               
@@ -61,8 +61,8 @@
 -->
                 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
-                    Cost
+                 <div class="label">
+                    Clabelt
                  </div>
                  </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
@@ -72,7 +72,7 @@
             </div>
               <div class="row">
                   <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                      Hours/Day
                  </div>
               
@@ -91,7 +91,7 @@
 <!--           <div class="warning d-block d-sm-none">Your screen is too small</div>         -->
              <div class="row">
                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                      Members
                  </div>
               
@@ -111,7 +111,7 @@
             
             <div class="row">
                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <div class="os">
+                 <div class="label">
                      deliverables
                  </div>
               
@@ -131,6 +131,7 @@
 
              <div class="btn btn-danger float-left  "> Add Project </div>
 
+        <script src="js/jquery.min.js"></script>
 
         <script src="js/bootstrap.min.js"></script>
         
