@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 19, 2019 at 04:59 PM
+-- Generation Time: Dec 19, 2019 at 06:06 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.0
 
@@ -21,6 +21,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `project-management-system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deliverables`
+--
+
+CREATE TABLE `deliverables` (
+  `id` int(11) NOT NULL,
+  `project-id` int(11) NOT NULL,
+  `title` text COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `deliverables`
+--
+
+INSERT INTO `deliverables` (`id`, `project-id`, `title`) VALUES
+(1, 1, 'Software application'),
+(2, 1, 'Training plan');
 
 -- --------------------------------------------------------
 
@@ -150,6 +170,13 @@ INSERT INTO `task-members` (`task-id`, `member-id`, `working-hours`) VALUES
 --
 
 --
+-- Indexes for table `deliverables`
+--
+ALTER TABLE `deliverables`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pid-delivery` (`project-id`);
+
+--
 -- Indexes for table `member`
 --
 ALTER TABLE `member`
@@ -201,6 +228,12 @@ ALTER TABLE `task-members`
 --
 
 --
+-- AUTO_INCREMENT for table `deliverables`
+--
+ALTER TABLE `deliverables`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
@@ -227,6 +260,12 @@ ALTER TABLE `task`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `deliverables`
+--
+ALTER TABLE `deliverables`
+  ADD CONSTRAINT `pid-delivery` FOREIGN KEY (`project-id`) REFERENCES `project` (`id`);
 
 --
 -- Constraints for table `project-member-titles`

@@ -1,7 +1,8 @@
 <?php
 ini_set('display_errors', true);
-require 'db.inc.php';
+error_reporting(E_ALL);
 
+require 'db.inc.php';
 $pid = isset($_GET['id']) ? $_GET['id'] :  0;
 
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `id` = ?');
@@ -15,7 +16,7 @@ $stmt = $link->prepare('SELECT * FROM `task` WHERE `project-id` = ?');
 $stmt->bind_param('i', $id);
 $stmt->bind_result($tid, $tname, $tstart_date, $tworking_hours, $tend_date, $parent_id, $tis_complete, $tactual_working_hours, $tis_milestone, $pid);
 $stmt->execute();
-
+$stmt->store_result();
 ?>
 <html>
     <head>
@@ -35,16 +36,33 @@ $stmt->execute();
             </div>
             <div class="row">
                 <div class="col-12">
-                    <span>ID: <?= $id ?></span>
+                    <span><b>ID:</b> <?= $id ?></span>
                 </div>
                 <div class="col-12">
-                    <span>NAME: <?= $name ?></span>
+                    <span><b>NAME:</b> <?= $name ?></span>
                 </div>
                 <div class="col-12">
-                    <span>Start date: <?= $start_date ?></span>
+                    <span><b>Start date:</b> <?= $start_date ?></span>
                 </div>
                 <div class="col-12">
-                    <span>Due date: <?= $end_date ?></span>
+                    <span><b>Due date:</b> <?= $end_date ?></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <label><b>Deliverables:</b></label>
+                    <ol>
+                    <?php
+                        $d_stmt = $link->prepare('SELECT `title` FROM `deliverables` WHERE `project-id` = ?');
+                        $d_stmt->bind_param('i', $pid);
+                        $d_stmt->bind_result($d_title);
+                        $d_stmt->execute();
+                        while($d_stmt->fetch()){
+                            echo "<li>{$d_title}</li>";
+                        }
+                        $d_stmt->close();
+                    ?>
+                    </ol>
                 </div>
             </div>
             <div class="row">
@@ -67,7 +85,6 @@ $stmt->execute();
                             <th>Action</th>
                         </tr>
                         <?php
-                            $stmt->store_result();
                             $dependency_stmt = $link->prepare('SELECT `main-task` FROM `task-dependency` WHERE `dependent-task` = ?');
                             $dependency_stmt->bind_param('i', $tid);
                             $dependency_stmt->bind_result($main_task);
