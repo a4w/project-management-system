@@ -2,7 +2,7 @@
 ini_set('display_errors', true);
 require 'db.inc.php';
 
-$pid = $_GET['id'] ?? 0;
+$pid = isset($_GET['id']) ? $_GET['id'] :  0;
 
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `id` = ?');
 $stmt->bind_param('i', $pid);
