@@ -1,3 +1,15 @@
+<?php
+ini_set('display_errors', true);
+require 'db.inc.php';
+
+$pid = isset($_GET['id']) ? $_GET['id'] :  0;
+
+$stmt = $link->prepare('SELECT * FROM `project` WHERE `id` = ?');
+$stmt->bind_param('i', $pid);
+$stmt->bind_result($id, $name, $hpd, $cost, $start_date, $end_date);
+$stmt->execute();
+
+?>
 <html>
     <head>
         <title>Project info</title>
@@ -30,7 +42,23 @@
                             <th>Cost</th>
                             <th>Deliverables</th>
                         </tr>
-                        
+                        <?php
+                            while($stmt->fetch()){
+                                echo "
+                                    <tr>
+                                        <td>{$id}</td>
+                                        <td>{$name}</td>
+                                        <td>{$hpd}</td>
+                                        <td>{$start_date}</td>
+                                        <td>{$end_date}</td>
+                                        <td>{$cost}</td>
+                                        <td></td>
+                                    </tr>
+                                ";
+                            }
+                            $stmt->close();
+
+                        ?>
                     </table>
                 </div>
             </div>
