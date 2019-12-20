@@ -8,7 +8,7 @@
         
     </head>
     <body>
-       <form method="post" action="db.inc.php">
+       <form method="post" action="db.inc.php" name="add_project">
         <div class="container">
           <h1>Add Project</h1>
            
@@ -62,7 +62,7 @@
                  </div>
                  </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <input type="number" name="Cost" min="0"  >
+                 <input type="number" name="Cost" min="0"  step=any >
                  
             </div>    
             </div>
@@ -104,13 +104,16 @@
                  <div class="label">
                      deliverables
                  </div>
-              
-           
+                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <select multiple size="4" name="Members">
+             <option value="volvo">member1</option>
+             </select>
+               </div>
               </div>
          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
              <input type="text" name="deliverables">
            </div> 
-    <a class="btn btn-primary"  href="db.inc.php"> Add deliverable </a>
+    <div class="btn btn-primary" onclick="addDeliverables()"> Add deliverable </div>
             </div>
             
             
@@ -119,7 +122,7 @@
         <!--container-fluid (all page)-->
     
 
-             <a class="btn btn-danger float-left  "   href="db.inc.php"> Add Project </a>
+            <input class="btn btn-danger float-left  "  value="Add Project " type="submit">
                          
         </form> 
 
