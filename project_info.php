@@ -67,7 +67,7 @@ $stmt->store_result();
             </div>
             <div class="row">
                 <div class="col-12">
-                    <button class="btn btn-primary float-right m-2">Add Task</button>
+                    <a class="btn btn-primary float-right m-2" href="add_task.php?pid=<?=$pid?>">Add Task</a>
                 </div>
                 <div class="col-12">
                     <table class="table">
