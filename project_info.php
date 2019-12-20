@@ -14,7 +14,7 @@ $stmt->close();
 
 $stmt = $link->prepare('SELECT * FROM `task` WHERE `project-id` = ?');
 $stmt->bind_param('i', $id);
-$stmt->bind_result($tid, $tname, $tstart_date, $tworking_hours, $tend_date, $parent_id, $tis_complete, $tactual_working_hours, $tis_milestone, $pid);
+$stmt->bind_result($tid, $tname, $tstart_date, $tend_date, $tworking_hours, $parent_id, $tis_complete, $tactual_working_hours, $tis_milestone, $pid);
 $stmt->execute();
 $stmt->store_result();
 ?>
