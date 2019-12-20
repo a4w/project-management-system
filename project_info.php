@@ -78,6 +78,7 @@ $stmt->store_result();
                             <th>Start date</th>
                             <th>End date</th>
                             <th>Working hours</th>
+                            <th>Actual Working hours</th>
                             <th>Predecessors</th>
                             <th>Parent task</th>
                             <th>Is Milestone</th>
@@ -91,6 +92,7 @@ $stmt->store_result();
                             while($stmt->fetch()){
                                 $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
                                 $complete_str = $tis_complete ? 'Complete' : 'Pending';
+                                $tactual_working_hours = $tis_complete ? $tactual_working_hours : 'Pending';
                                 $milestone_str = $tis_milestone ? 'YES' : 'NO';
                                 // Get main tasks
                                 $dependency_stmt->execute();
@@ -116,6 +118,7 @@ $stmt->store_result();
                                         <td>{$members_str}</td>
                                         <td>{$tstart_date}</td>
                                         <td>{$tend_date}</td>
+                                        <td>{$tworking_hours}</td>
                                         <td>{$tactual_working_hours}</td>
                                         <td>{$dependency_str}</td>
                                         <td>{$parent_id}</td>

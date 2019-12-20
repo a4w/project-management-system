@@ -104,6 +104,35 @@ $stmt->close();
                 </div>
             </div>
             <div class="row">
+                <div class="col-1">
+                    <label class="m-1">Assign Members</label>
+                </div>
+                <div class="col-3">
+                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members)?>">
+                        <?php
+                            $stmt->store_result();
+                            $members = $link->prepare('SELECT * FROM `member`');
+                            $members->bind_result($mid, $mname);
+                            $members->execute();
+                            while ($members->fetch()) {
+                                echo "<option value='{$mid}'>{$mname}</option>";
+                            }
+                            $members->close();
+                        ?>
+                    </select>
+                </div>
+                <div class="col-1">
+                    <!--
+                        buttons
+                        -->
+                </div>
+                <div class="col-3">
+                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members)?>">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-3">
                 </div>
                 <div class="col-1">
