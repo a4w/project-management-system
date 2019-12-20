@@ -10,9 +10,9 @@
 </head>
 
 <body>
-   <form method="post" action="project.controller.php">
-      <input type="hidden" name="action" value="add-project">
-      <div class="container">
+   <div class="container">
+      <form method="post" action="project.controller.php">
+         <input type="hidden" name="action" value="add-project">
          <h1>Add Project</h1>
 
          <div class="row">
@@ -82,7 +82,7 @@
             </div>
          </div>
 
-         
+
          <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                <div class="label">
@@ -92,8 +92,8 @@
             </div>
 
 
-            <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-               <select multiple size="4" id="select" style="width:70px" name="deliverables[]">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+               <select multiple size="4" id="select" style="width:180px" name="deliverables[]">
 
                </select>
             </div>
@@ -105,14 +105,18 @@
          </div>
 
 
-      </div>
 
-      <!--container-fluid (all page)-->
+         <!--container-fluid (all page)-->
+
+         <div class="row">
+            <div class="col-9">
+               <input class="btn btn-danger float-right m-5" style="height: 40px" value="Add Project " type="submit">
+            </div>
+         </div>
 
 
-      <input class="btn btn-danger float-left  " value="Add Project " type="submit">
-
-   </form>
+      </form>
+   </div>
 
    <script src="js/jquery.min.js"></script>
 

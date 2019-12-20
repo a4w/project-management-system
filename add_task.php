@@ -133,12 +133,8 @@ $stmt->close();
                 </div>
             </div>
             <div class="row">
-                <div class="col-3">
-                </div>
-                <div class="col-1">
-                    <input class="btn btn-primary float-right m-3" type="submit" value="Add Task">
-                </div>
                 <div class="col-8">
+                    <input class="btn btn-primary float-right m-3" type="submit" value="Add Task">
                 </div>
             </div>
         </form>
