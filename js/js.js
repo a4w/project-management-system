@@ -8,7 +8,7 @@ function addDeliverables(){
 function login(){
 	var userName = document.forms["loginForm"]["userName"].value;
 	var password = document.forms["loginForm"]["password"].value;
-	if(userName == "userName" && password == "password"){
+	if(userName == "username" && password == "1234"){
 //        window.location.href="add_project.php";
         return true;
     }
