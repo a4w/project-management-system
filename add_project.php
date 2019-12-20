@@ -110,7 +110,7 @@
               
               
                <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
-                <select multiple size="4" id="select" min="50px" >
+                <select multiple size="4" id="select" style="width:70px" >
            
              </select>
                </div>

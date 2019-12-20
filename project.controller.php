@@ -39,13 +39,19 @@ switch($action){
         header('Location:Project_info.php?id='.$pid);
     break;
     case "add-project":
+        $deliverables = $_POST['deliverables'];
         $name = $_POST["Name"];
         $StartDate = $_POST["StartDate"];
         $EndDate = $_POST["EndDate"];
         $Cost = $_POST["Cost"];
         $HoursperDay = $_POST["HoursperDay"];
         $Members = $_POST["Members"];
-        $sql = "INSERT INTO project (name, 	hours-per-day, cost , 	start-date , 	end-date) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
+        $sql = "INSERT INTO project (name, 	`hours-per-day`, cost , 	`start-date` , 	`end-date`) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
+        $id = $link->last_insert_id;
+        foreach($deliverables as $deliverable){
+            $stmt = "INSERT INTO deliverables (project-id,title) VALUES ('$id','$deliverable')";
+        }
+        
         header('Location:Projects.php');
     break;    
 }
