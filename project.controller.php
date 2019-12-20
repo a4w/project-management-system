@@ -45,7 +45,6 @@ switch($action){
         $EndDate = $_POST["EndDate"];
         $Cost = $_POST["Cost"];
         $HoursperDay = $_POST["HoursperDay"];
-        $Members = $_POST["Members"];
         $sql = "INSERT INTO project (name, 	`hours-per-day`, cost , 	`start-date` , 	`end-date`) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
         mysqli_query($link, $sql);
         var_dump($deliverables);
@@ -56,6 +55,6 @@ switch($action){
             $insert->execute();
         }
         
-        //header('Location:Projects.php');
+        header('Location:Projects.php');
     break;    
 }
