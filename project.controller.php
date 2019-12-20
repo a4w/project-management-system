@@ -47,11 +47,15 @@ switch($action){
         $HoursperDay = $_POST["HoursperDay"];
         $Members = $_POST["Members"];
         $sql = "INSERT INTO project (name, 	`hours-per-day`, cost , 	`start-date` , 	`end-date`) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
-        $id = $link->last_insert_id;
+        mysqli_query($link, $sql);
+        var_dump($deliverables);
+        $id = mysqli_insert_id($link);
         foreach($deliverables as $deliverable){
-            $stmt = "INSERT INTO deliverables (project-id,title) VALUES ('$id','$deliverable')";
+            $insert = $link->prepare('INSERT INTO `deliverables` (`project-id`, `title`) VALUES (?,?)');
+            $insert->bind_param('is', $id, $deliverable);
+            $insert->execute();
         }
         
-        header('Location:Projects.php');
+        //header('Location:Projects.php');
     break;    
 }
