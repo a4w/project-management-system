@@ -9,7 +9,7 @@
         <link rel='stylesheet' href='css/style.css'/>
     </head>
     <body>
-	<form method="post" name="loginForm" onsubmit="return login()" action="Project.php">
+	<form method="post" name="loginForm" onsubmit="return login()" action="Projects.php">
         <div class="container">
 			<h1>Login :</h1>
             
