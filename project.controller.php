@@ -30,6 +30,22 @@ switch($action){
         $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
         $stmt->bind_param('sssiiii',$task_name, $start_date, $end_date, $working_hrs, $parent, $milestone, $pid);
         $stmt->execute();
+        $tid = $link->last_insert_id;
+        foreach($predecessors as $pre){
+            $stmt = $link->prepare('INSERT INTO `task-dependency` VALUES (?,?)');
+            $stmt->bind_param('ii', $tid,$pre);
+            $stmt->execute();
+        }
         header('Location:Project_info.php?id='.$pid);
     break;
+    case "add-project":
+        $name = $_POST["Name"];
+        $StartDate = $_POST["StartDate"];
+        $EndDate = $_POST["EndDate"];
+        $Cost = $_POST["Cost"];
+        $HoursperDay = $_POST["HoursperDay"];
+        $Members = $_POST["Members"];
+        $sql = "INSERT INTO project (name, 	hours-per-day, cost , 	start-date , 	end-date) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
+        header('Location:Projects.php');
+    break;    
 }
