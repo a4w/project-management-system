@@ -11,4 +11,10 @@ switch($action){
         $stmt->bind_param('ii', $wh, $tid);
         $stmt->execute();
         break;
+    case "add-member":
+        $member_name = $_POST['member'];
+        $stmt = $link->prepare('INSERT INTO `member` VALUES (null, ?) ');
+        $stmt->bind_param('s', $member_name);
+        $stmt->execute();
+        break;
 }
