@@ -16,7 +16,7 @@ $link = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	$Cost = $_POST["Cost"];
 	$HoursperDay = $_POST["HoursperDay"];
 	$Members = $_POST["Members"];
-	$sql = "INSERT INTO project (name, 	hours-per-day, cost , 	start-date , 	end-date) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
+	$sql = "INSERT INTO project (name, `hours-per-day`, cost , 	`start-date` , 	`end-date`) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
 
 if ($link->query($sql) === TRUE) {
     echo "New record created successfully";

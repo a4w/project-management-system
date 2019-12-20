@@ -1,9 +1,9 @@
 
-var deliverables = Array();
-function addDeliverables(){
-    deliverables.push(document.forms["add_project"]["deliverables"].value);
-    document.forms["add_project"]["deliverables"].value = "";
-};
+//var deliverables = Array();
+//function addDeliverables(){
+//    deliverables.push(document.forms["add_project"]["deliverables"].value);
+//    document.forms["add_project"]["deliverables"].value = "";
+//};
 
 function login(){
 	var userName = document.forms["loginForm"]["userName"].value;
@@ -18,4 +18,14 @@ function login(){
 		
 	}
 };
+function addDeliverables(){
+  var select = document.getElementById('select'),
+  txtval=document.getElementById('deliverable').value, 
 
+newOption=document.createElement("option"),
+newOptionVal = document.createTextNode(txtval);
+    
+    newOption.appendChild(newOptionVal);
+    select.insertBefore(newOption,select.lastChild);
+    
+};
