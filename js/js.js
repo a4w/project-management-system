@@ -8,8 +8,8 @@
 function login(){
 	var userName = document.forms["loginForm"]["userName"].value;
 	var password = document.forms["loginForm"]["password"].value;
-	if(userName == "userName" && password == "password"){
-//        window.location.href="add_project.php";
+	if(userName == "username" && password == "1234"){
+        window.location.href="Projects.php";
         return true;
     }
 	else{

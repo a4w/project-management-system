@@ -79,7 +79,7 @@ $stmt->close();
                     <label class="m-1">Predecessors</label>
                 </div>
                 <div class="col-3">
-                    <select multiple class="form-control m-1" name="predecessors">
+                    <select multiple class="form-control m-1" name="predecessors[]" size="<?= mysqli_num_rows($stmt)?>">
                         <?php
                         foreach ($ptask as $task) {
                             echo "<option value='{$task[0]}'>{$task[1]}</option>";
