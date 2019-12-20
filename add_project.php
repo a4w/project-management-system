@@ -82,26 +82,7 @@
             </div>
          </div>
 
-         <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-               <div class="label">
-                  Members
-               </div>
-
-
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 padding">
-               <select multiple size="4" name="Members">
-                  <option value="volvo">member1</option>
-                  <option value="saab">member2</option>
-                  <option value="opel">member4</option>
-                  <option value="audi">member4</option>
-                  <option value="audi">member5</option>
-               </select>
-            </div>
-         </div>
-
-
+         
          <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                <div class="label">
