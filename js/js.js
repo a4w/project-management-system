@@ -9,7 +9,7 @@ function login(){
 	var userName = document.forms["loginForm"]["userName"].value;
 	var password = document.forms["loginForm"]["password"].value;
 	if(userName == "username" && password == "1234"){
-//        window.location.href="add_project.php";
+        window.location.href="Projects.php";
         return true;
     }
 	else{
