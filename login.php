@@ -34,7 +34,7 @@
             </div>
         </div>
         
-		<div class="btn btn-danger float-left  " onclick = "login()" > Login </div>
+		<div class="btn btn-danger float-left  " onclick = "return login()" > Login </div>
 	</form>
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
