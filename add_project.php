@@ -104,14 +104,18 @@
                  <div class="label">
                      deliverables
                  </div>
-                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                <select multiple size="4" name="Members">
-             <option value="volvo">member1</option>
+                
+              </div>
+              
+              
+               <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+                <select multiple size="4" id="select" min="50px" >
+           
              </select>
                </div>
-              </div>
+              
          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-             <input type="text" name="deliverables">
+             <input type="text" id="deliverable" >
            </div> 
     <div class="btn btn-primary" onclick="addDeliverables()"> Add deliverable </div>
             </div>
