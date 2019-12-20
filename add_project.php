@@ -8,9 +8,12 @@
         
     </head>
     <body>
+       <form method="post" action="db.inc.php">
         <div class="container">
           <h1>Add Project</h1>
+           
             <div class="row">
+             
               <div class= "col-lg-3 col-md-4 col-sm-6 col-xs-12">
                  <div class="label">
                     Name  
@@ -51,22 +54,15 @@
               </div>
         
                 <div class="row">
-<!--
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 d-none d-md-block d-lg-none">
-                 <div class="label">
-                     visible only at medium 
-                 </div>
-              
-              </div>
--->
+
                 
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                  <div class="label">
-                    Clabelt
+                    Cost
                  </div>
                  </div>
                     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <input type="number" name="" min="0">
+                 <input type="number" name="Cost" min="0"  >
                  
             </div>    
             </div>
@@ -79,16 +75,10 @@
            
               </div>
                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-                 <input type="number" name="" step="1" min="1" max="24">
+                 <input type="number" name="HoursperDay" step="1" min="1" max="24">
               </div>
               </div>
-<!--
-                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 d-block d-sm-none">
-                 <div class="blue">
-                     hidden on xs
-                 </div>
--->
-<!--           <div class="warning d-block d-sm-none">Your screen is too small</div>         -->
+
              <div class="row">
                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                  <div class="label">
@@ -98,7 +88,7 @@
            
               </div>
                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 padding">
-             <select multiple size="4">
+             <select multiple size="4" name="Members">
   <option value="volvo">member1</option>
   <option value="saab">member2</option>
   <option value="opel">member4</option>
@@ -120,7 +110,7 @@
          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
              <input type="text" name="deliverables">
            </div> 
-    <div class="btn btn-primary"> Add deliverable </div>
+    <a class="btn btn-primary"  href="db.inc.php"> Add deliverable </a>
             </div>
             
             
@@ -129,7 +119,9 @@
         <!--container-fluid (all page)-->
     
 
-             <div class="btn btn-danger float-left  "> Add Project </div>
+             <a class="btn btn-danger float-left  "   href="db.inc.php"> Add Project </a>
+                         
+        </form> 
 
         <script src="js/jquery.min.js"></script>
 
