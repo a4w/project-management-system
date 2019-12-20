@@ -8,7 +8,8 @@
         
     </head>
     <body>
-       <form method="post" action="db.inc.php">
+       <form method="post" action="project.controller.php">
+         <input type="hidden" name="action" value="add-project">
         <div class="container">
           <h1>Add Project</h1>
            
@@ -110,7 +111,7 @@
          <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
              <input type="text" name="deliverables">
            </div> 
-    <a class="btn btn-primary"  href="db.inc.php"> Add deliverable </a>
+    <a class="btn btn-primary"  href="project.controller.php"> Add deliverable </a>
             </div>
             
             
@@ -119,7 +120,7 @@
         <!--container-fluid (all page)-->
     
 
-             <a class="btn btn-danger float-left  "   href="db.inc.php"> Add Project </a>
+             <a class="btn btn-danger float-left  "   href="project.controller.php"> Add Project </a>
                          
         </form> 
 
