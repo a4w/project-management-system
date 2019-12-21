@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<?php
+include 'db.inc.php';
+?>
 <html lang="en">
 
 <head>
@@ -83,9 +86,40 @@
                             <div class="btn btn-success" onclick="addDeliverables()"><b>+</b></div>
                         </div>
                     </div>
-                    <select multiple size="4" id="deliverables_dd" name="deliverables[]" class="form-control">
+                    <select multiple size="4" id="deliverables_dd" name="deliverables" class="form-control mb-2">
 
                     </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                    <div class="label">
+                        Members
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <select multiple id="members_pool" class="form-control">
+                        <?php
+                            $stmt = $link->prepare('SELECT `id`, `name` FROM `member`');
+                            $stmt->bind_result($id, $name);
+                            $stmt->execute();
+                            while($stmt->fetch()){
+                                echo "<option value='{$id}'>{$name}</option>";
+                            }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-lg-1">
+                    <button class="btn btn-sm btn-success d-block mx-auto mb-1" type="button" id="add_member"><b>></b></button>
+                    <button class="btn btn-sm btn-danger d-block mx-auto" type="button" id="remove_member"><b><</b></button>
+                </div>
+                <div class="col-lg-3">
+                    <select multiple name="members" id="members" class="form-control">
+                    </select>
+                </div>
+                <div class="col-lg-2">
+                    <input type="number" class="form-control" id="working_hours" placeholder="Working hours" disabled/>
                 </div>
             </div>
 
@@ -107,6 +141,42 @@
             select.append("<option>" + value + "</option>");
             $("#deliverable_txt").val("").focus();
         };
+        $("#add_member").click(function(){
+            // Get selected members
+            const members = $("#members_pool").val();
+            for(let member_id of members){
+                const option = $("#members_pool option[value='" + member_id + "']");
+                $("#members").append(option);
+            }
+        $("#members").change();
+        });
+        $("#remove_member").click(function(){
+            // Get selected members
+            const members = $("#members").val();
+            for(let member_id of members){
+                const option = $("#members option[value='" + member_id + "']");
+                $("#members_pool").append(option);
+            }
+        $("#members").change();
+        });
+        let member_working_hours = {};
+        $("#members").change(function(){
+            const members = $(this).val();
+            if(members.length === 1){
+                $("#working_hours").attr("disabled", false);
+                if(typeof member_working_hours[members[0]] === "undefined")
+                    member_working_hours[members[0]] = 0;
+                $("#working_hours").val(member_working_hours[members[0]]);
+                $("#working_hours").attr("data-target", members[0]);
+            }else{
+                $("#working_hours").attr("disabled", true);
+                $("#working_hours").val("");
+            }
+        });
+        $("#working_hours").change(function(){
+            const id = $(this).attr("data-target");
+            member_working_hours[id] = $(this).val();
+        });
     </script>
 </body>
 
