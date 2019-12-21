@@ -7,7 +7,7 @@ $pid = isset($_GET['id']) ? $_GET['id'] :  0;
 
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `id` = ?');
 $stmt->bind_param('i', $pid);
-$stmt->bind_result($id, $name, $hpd, $cost, $start_date, $end_date);
+$stmt->bind_result($id, $pm, $name, $hpd, $cost, $start_date, $end_date);
 $stmt->execute();
 $stmt->fetch();
 $stmt->close();
@@ -46,6 +46,9 @@ $stmt->store_result();
                 </div>
                 <div class="col-12">
                     <span><b>Due date:</b> <?= $end_date ?></span>
+                </div>
+                <div class="col-12">
+                    <span><b>Hours Per Day:</b> <?= $hpd ?></span>
                 </div>
             </div>
             <div class="row">
