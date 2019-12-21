@@ -3,7 +3,7 @@ ini_set('display_errors', true);
 require 'db.inc.php';
 
 $stmt = $link->prepare('SELECT * FROM `project`');
-$stmt->bind_result($id, $name, $hpd, $cost, $start_date, $end_date);
+$stmt->bind_result($id, $dummy, $name, $hpd, $cost, $start_date, $end_date);
 $stmt->execute();
 
 ?>
