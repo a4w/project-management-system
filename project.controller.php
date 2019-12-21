@@ -25,8 +25,9 @@ switch ($action) {
         $end_date = $_POST['end-date'];
         $working_hrs = $_POST['working-hrs'];
         $milestone = isset($_POST['milestone']);
-        $predecessors = $_POST['predecessors'];
+        $predecessors = $_POST['predecessors'] ?? [];
         $parent = $_POST['parent'];
+        $mem_working_hours = $_POST['working_hours'] ?? [];
         $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
         $stmt->bind_param('sssiiii', $task_name, $start_date, $end_date, $working_hrs, $parent, $milestone, $pid);
         $stmt->execute();
@@ -36,7 +37,17 @@ switch ($action) {
             $stmt->bind_param('ii', $pre, $tid);
             $stmt->execute();
         }
-        header('Location:Project_info.php?id=' . $pid);
+        $stmt->close();
+        $stmt = $link->prepare('INSERT INTO `task-members` VALUES (?,?,?)');
+        $stmt->bind_param('iii', $tid, $mid, $wh);
+        foreach($mem_working_hours as $t){
+            $ta = explode('_', $t);
+            $mid = $ta[0];
+            $wh = $ta[1];
+            $stmt->execute();
+        }
+        $stmt->close();
+        header('Location:project_info.php?id=' . $pid);
         break;
     case "add-project":
         $deliverables = $_POST['deliverables'] ?? [];
@@ -62,7 +73,6 @@ switch ($action) {
             $mid = $ta[0];
             $title = $ta[1];
             $stmt->execute();
-            var_dump($stmt->error);
         }
         $stmt->close();
         header('Location:Projects.php');
@@ -71,7 +81,7 @@ switch ($action) {
             $day = $_POST['day'];
             $hrs = $_POST['hrs'];
             $pm = $_POST['pm'];
-    
+
             /*$stmt = $link->prepare("SELECET * FROM `plan-config` WHERE day = ? AND t-hrs = ?");
             $stmt->bind_param('si', $day, $hrs);
             $stmt->bind_result($id, $d, $h);
