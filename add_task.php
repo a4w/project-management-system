@@ -2,7 +2,7 @@
 ini_set('display_errors', true);
 require 'db.inc.php';
 
-$pid = isset($_GET['pid']) ? $_GET['pid'] :  0;
+$pid = isset($_GET['pid']) ? $_GET['pid'] : 0;
 $stmt = $link->prepare('SELECT `name`, `id` FROM `task` WHERE `project-id` = ?');
 $stmt->bind_param('i', $pid);
 $stmt->bind_result($name, $tid);
@@ -79,7 +79,7 @@ $stmt->close();
                     <label class="m-1">Predecessors</label>
                 </div>
                 <div class="col-3">
-                    <select multiple class="form-control m-1" name="predecessors[]" size="<?= mysqli_num_rows($stmt)?>">
+                    <select multiple class="form-control m-1" name="predecessors[]" size="<?= mysqli_num_rows($stmt) ?>">
                         <?php
                         foreach ($ptask as $task) {
                             echo "<option value='{$task[0]}'>{$task[1]}</option>";
@@ -108,16 +108,16 @@ $stmt->close();
                     <label class="m-1">Assign Members</label>
                 </div>
                 <div class="col-3">
-                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members)?>">
+                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members) ?>">
                         <?php
-                            $stmt->store_result();
-                            $members = $link->prepare('SELECT * FROM `member`');
-                            $members->bind_result($mid, $mname);
-                            $members->execute();
-                            while ($members->fetch()) {
-                                echo "<option value='{$mid}'>{$mname}</option>";
-                            }
-                            $members->close();
+                        $stmt->store_result();
+                        $members = $link->prepare('SELECT * FROM `member`');
+                        $members->bind_result($mid, $mname);
+                        $members->execute();
+                        while ($members->fetch()) {
+                            echo "<option value='{$mid}'>{$mname}</option>";
+                        }
+                        $members->close();
                         ?>
                     </select>
                 </div>
@@ -127,8 +127,8 @@ $stmt->close();
                         -->
                 </div>
                 <div class="col-3">
-                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members)?>">
-                        
+                    <select multiple class="form-control m-1" name="members[]" size="<?= mysqli_num_rows($members) ?>">
+
                     </select>
                 </div>
             </div>
