@@ -29,6 +29,39 @@ $stmt->execute();
             <div class="col-12">
                 <a class="btn btn-primary float-right m-2" href="add_project.php">Add Project</a>
                 <button class="btn btn-primary float-right m-2" id="add-member-btn">Add Member</button>
+                <button type="button" class="btn btn-primary float-right m-2" data-toggle="modal" data-target="#myModal">Edit Plan Config</button>
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Plan Configration</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="project.controller.php" method="POST" class="form">
+                                    <input type="hidden" id="pm" value="<?= $pm_id ?>">
+                                    <div class="form-group">
+                                        <label class="col-4 control-label">Start Day: </label>
+                                        <div class="col">
+                                            <input type="radio" name="day" id="day" value="0"> Sunday
+                                            <input type="radio" name="day" id="day" value="1"> Monday
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col control-label">Working Hours Per Day: </label>
+                                        <div class="col">
+                                            <input type="number" name="working-hrs" id="working-hrs" min="1" class="form-control">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="save">Save</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
             <div class="col-12">
                 <table class="table">
@@ -85,6 +118,19 @@ $stmt->execute();
             $.post("project.controller.php", {
                 "action": "add-member",
                 "member": member
+            });
+        });
+        $(document).ready(function() {
+            $("#save").click(function(){
+                const day = $("#day").val;
+                const hrs = $("#working-hrs").val;
+                const pm = $("#pm").val;
+                $.post("project.controller.php", {
+                "action": "plan-config",
+                "day": day,
+                "hrs": hrs,
+                "pm": pm
+                });
             });
         });
     </script>
