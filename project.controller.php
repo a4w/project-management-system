@@ -47,7 +47,6 @@ switch($action){
         $HoursperDay = $_POST["HoursperDay"];
         $sql = "INSERT INTO project (name, 	`hours-per-day`, cost , 	`start-date` , 	`end-date`) VALUES ('$name','$HoursperDay', '$Cost', '$StartDate', '$EndDate')";
         mysqli_query($link, $sql);
-        var_dump($deliverables);
         $id = mysqli_insert_id($link);
         foreach($deliverables as $deliverable){
             $insert = $link->prepare('INSERT INTO `deliverables` (`project-id`, `title`) VALUES (?,?)');
