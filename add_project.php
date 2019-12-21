@@ -78,12 +78,12 @@
                 </div>
                 <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                     <div class="input-group mb-2">
-                        <input type="text" id="deliverable" class="form-control">
+                        <input type="text" id="deliverable_txt" class="form-control">
                         <div class="input-group-append">
                             <div class="btn btn-success" onclick="addDeliverables()"><b>+</b></div>
                         </div>
                     </div>
-                    <select multiple size="4" id="select" name="deliverables[]" class="form-control">
+                    <select multiple size="4" id="deliverables_dd" name="deliverables[]" class="form-control">
 
                     </select>
                 </div>
@@ -102,15 +102,10 @@
     <script src="js/js.js"></script>
     <script>
         function addDeliverables() {
-            var select = document.getElementById('select'),
-                txtval = document.getElementById('deliverable').value,
-
-                newOption = document.createElement("option"),
-                newOptionVal = document.createTextNode(txtval);
-
-            newOption.appendChild(newOptionVal);
-            select.insertBefore(newOption, select.lastChild);
-
+            const select = $("#deliverables_dd");
+            const value = $("#deliverable_txt").val();
+            select.append("<option>" + value + "</option>");
+            $("#deliverable_txt").val("").focus();
         };
     </script>
 </body>
