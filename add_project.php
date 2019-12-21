@@ -14,7 +14,7 @@ include 'db.inc.php';
 
 <body>
     <div class="container">
-        <form method="post" action="project.controller.php">
+        <form method="post" name="main_form" id="main_form" action="project.controller.php">
             <input type="hidden" name="action" value="add-project">
             <h1>Add Project</h1>
 
@@ -86,7 +86,7 @@ include 'db.inc.php';
                             <div class="btn btn-success" onclick="addDeliverables()"><b>+</b></div>
                         </div>
                     </div>
-                    <select multiple size="4" id="deliverables_dd" name="deliverables" class="form-control mb-2">
+                    <select multiple size="4" readonly name="deliverables[]" id="deliverables_dd" class="form-control mb-2">
 
                     </select>
                 </div>
@@ -119,13 +119,13 @@ include 'db.inc.php';
                     </select>
                 </div>
                 <div class="col-lg-2">
-                    <input type="number" class="form-control" id="working_hours" placeholder="Working hours" disabled/>
+                    <input type="text" class="form-control" id="title" placeholder="Member title" disabled />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6">
-                    <input class="btn btn-danger float-right mt-3" value="Add Project" type="submit">
+                    <input class="btn btn-danger float-right mt-3" value="Add Project" type="button" id="add_project">
                 </div>
             </div>
         </form>
@@ -136,9 +136,12 @@ include 'db.inc.php';
     <script src="js/js.js"></script>
     <script>
         function addDeliverables() {
-            const select = $("#deliverables_dd");
             const value = $("#deliverable_txt").val();
-            select.append("<option>" + value + "</option>");
+            $('#deliverables_dd').append($('<option>', {
+                value: value,
+                text: value,
+                selected: true
+            }));
             $("#deliverable_txt").val("").focus();
         };
         $("#add_member").click(function(){
@@ -148,7 +151,7 @@ include 'db.inc.php';
                 const option = $("#members_pool option[value='" + member_id + "']");
                 $("#members").append(option);
             }
-        $("#members").change();
+            $("#members").change();
         });
         $("#remove_member").click(function(){
             // Get selected members
@@ -157,26 +160,35 @@ include 'db.inc.php';
                 const option = $("#members option[value='" + member_id + "']");
                 $("#members_pool").append(option);
             }
-        $("#members").change();
+            $("#members").change();
         });
-        let member_working_hours = {};
+        let member_titles = {};
         $("#members").change(function(){
             const members = $(this).val();
             if(members.length === 1){
-                $("#working_hours").attr("disabled", false);
-                if(typeof member_working_hours[members[0]] === "undefined")
-                    member_working_hours[members[0]] = 0;
-                $("#working_hours").val(member_working_hours[members[0]]);
-                $("#working_hours").attr("data-target", members[0]);
+                $("#title").attr("disabled", false);
+                if(typeof member_titles[members[0]] === "undefined")
+                    member_titles[members[0]] = "";
+                $("#title").val(member_titles[members[0]]);
+                $("#title").attr("data-target", members[0]);
             }else{
-                $("#working_hours").attr("disabled", true);
-                $("#working_hours").val("");
+                $("#title").attr("disabled", true);
+                $("#title").val("");
             }
         });
-        $("#working_hours").change(function(){
+        $("#title").change(function(){
             const id = $(this).attr("data-target");
-            member_working_hours[id] = $(this).val();
+            member_titles[id] = $(this).val();
         });
+        $("#add_project").click(function(){
+            const members = $("#members > option");
+            members.each(function(i, e){
+                const member_id = $(e).val();
+                $("#main_form").append("<input type='hidden' name='titles[]' value='" + member_id + "_" + member_titles[member_id] + "' />");
+            });
+            document.main_form.submit();
+        });
+
     </script>
 </body>
 
