@@ -30,6 +30,17 @@ switch ($action) {
         $mem_working_hours = $_POST['working_hours'] ?? [];
         $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
         $working_hrs = $working_days * $plan_cfg['hrs'];
+        // Check if within project timeline
+        $stmt = $link->prepare('SELECT `start-date`, `end-date` FROM `project` WHERE `id` = ?');
+        $stmt->bind_param('i', $pid);
+        $stmt->bind_result($proj_start_date, $proj_end_date);
+        $stmt->execute();
+        $stmt->fetch();
+        $stmt->close();
+        if(strtotime($start_date) < strtotime($proj_start_date) || strtotime($end_date) > strtotime($proj_end_date)){
+            echo "Sorry, the selected start and end dates are outside the project's time range";
+            exit();
+        }
         // Check parent task start and end
         if($parent !== 'NULL'){
             $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-hours` FROM `task` WHERE `id` = ?');
