@@ -15,13 +15,20 @@ $stmt->execute();
 $stmt->fetch();
 $stmt->close();
 
+$stmt = $link->prepare('SELECT `day`, `hrs-per-day` FROM `plan-cfg` WHERE `pm-id` = ?');
+$stmt->bind_param('i', $pm_id);
+$stmt->bind_result($pcfg_day, $pcfg_hrs);
+$stmt->execute();
+$stmt->fetch();
+$stmt->close();
+
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `pm-id` = ?');
 $stmt->bind_param('i', $pm_id);
 $stmt->bind_result($id, $dummy, $name, $hpd, $cost, $start_date, $end_date);
 $stmt->execute();
 
 
-$plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
+
 
 ?>
 <html>
@@ -60,14 +67,14 @@ $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
                                 <div class="form-group">
                                     <label class="col-4 control-label">Start Day: </label>
                                     <div class="col">
-                                        <input type="radio" <?= $plan_cfg['day'] == 0 ? 'checked' : '' ?> name="day" value="0"> Sunday
-                                        <input type="radio" <?= $plan_cfg['day'] == 1 ? 'checked' : '' ?> name="day" value="1"> Monday
+                                        <input type="radio" name="day" <?= $pcfg_day == 0 ? 'checked' : '' ?> name="day" value="0"> Sunday
+                                        <input type="radio" name="day" <?= $pcfg_day == 1 ? 'checked' : '' ?> name="day" value="1"> Monday
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col control-label">Working Hours Per Day: </label>
                                     <div class="col">
-                                        <input type="number" name="working-hrs" value="<?=$plan_cfg['hrs']?>" id="working-hrs" min="1" class="form-control">
+                                        <input type="number" name="working-hrs" value="<?=$pcfg_hrs?>" id="working-hrs" min="1" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -146,9 +153,8 @@ $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
                 }); 
         });
         $("#save").click(function() {
-            const day = $("#day").val;
-            const hrs = $("#working-hrs").val;
-            const pm = $("#pm").val;
+            const day = $("input[name=day]:checked").val();
+            const hrs = $("#working-hrs").val();
             $.post("project.controller.php", {
                 "action": "plan-config",
                 "day": day,

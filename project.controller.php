@@ -171,16 +171,19 @@ switch ($action) {
         case "plan-config":
             $day = $_POST['day'];
             $hrs = $_POST['hrs'];
-            $stmt = $link->prepare("SELECET day, `hrs-per-day` FROM `plan-cfg` WHERE `pm-id` = ? ");
+            $stmt = $link->prepare("SELECT day, `hrs-per-day` FROM `plan-cfg` WHERE `pm-id` = ? ");
             $stmt->bind_param('i', $pm);
             $stmt->bind_result($d, $h);
             $stmt->execute();
             if(!$stmt->fetch()){
+                $stmt->close();
                 $insert = $link->prepare("INSERT INTO `plan-cfg` (`pm-id`, day, `hrs-per-day`) VALUES (?, ?, ?)");
                 $insert->bind_param('iii',$pm, $day, $hrs);
                 $insert->execute();
             }else{
+                $stmt->close();
                 $update = $link->prepare("UPDATE `plan-cfg` SET `day` = ?, `hrs-per-day` = ?  WHERE `pm-id` = ?");
+                echo $link->error;
                 $update->bind_param('iii', $day, $hrs, $pm);
                 $update->execute();
             }
