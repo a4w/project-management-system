@@ -111,11 +111,6 @@ $p_stmt->store_result();
                             $dependency_stmt->bind_param('i', $tid);
                             $dependency_stmt->bind_result($main_task);
                             while($stmt->fetch()){
-                                $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
-                                $complete_str = $tis_complete ? 'Complete' : 'Pending';
-                                $tactual_working_days = $tis_complete ? $tactual_working_days : 'Pending';
-                                $alert = $tis_complete && $tactual_working_days > $tworking_days;
-                                $milestone_str = $tis_milestone ? 'YES' : 'NO';
                                 // Get main tasks
                                 $dependency_stmt->execute();
                                 $dependencies = array();
@@ -133,9 +128,14 @@ $p_stmt->store_result();
                                     $members[] = $member_name . ' (' . $member_working_hours . ')';
                                 }
                                 $members_str = implode('<br />', $members);
-                                $warn_class = $alert ? 'text-danger font-weight-bold' : '';
                                 $tworking_hrs = $tworking_days * $hrs;
                                 $tactual_working_hours = $tactual_working_days * $hrs;
+                                $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
+                                $complete_str = $tis_complete ? 'Complete' : 'Pending';
+                                $tactual_working_days = $tis_complete ? $tactual_working_days : 'Pending';
+                                $alert = $tis_complete && $tactual_working_days > $tworking_days;
+                                $milestone_str = $tis_milestone ? 'YES' : 'NO';
+                                $warn_class = $alert ? 'text-danger font-weight-bold' : '';
                                 echo "
                                     <tr class='$warn_class'>
                                         <td>{$tid}</td>
