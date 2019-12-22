@@ -23,11 +23,13 @@ switch ($action) {
         $task_name = $_POST['task-name'];
         $start_date = $_POST['start-date'];
         $end_date = $_POST['end-date'];
-        $working_hrs = $_POST['working-hrs'];
+        $working_days = $_POST['working-days'];
         $milestone = isset($_POST['milestone']);
         $predecessors = $_POST['predecessors'] ?? [];
         $parent = $_POST['parent'];
         $mem_working_hours = $_POST['working_hours'] ?? [];
+        $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
+        $working_hrs = $working_days * $plan_cfg['hrs'];
         // Check parent task start and end
         if($parent !== 'NULL'){
             $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-hours` FROM `task` WHERE `id` = ?');

@@ -60,10 +60,10 @@ $stmt->close();
             </div>
             <div class="row">
                 <div class="col-2">
-                    <label class="m-1">Working Hours</label>
+                    <label class="m-1">Working Days</label>
                 </div>
                 <div class="col-3">
-                    <input type="number" step="1" min="0" class="form-control m-1" name="working-hrs">
+                    <input type="number" step="1" min="0" class="form-control m-1" name="working-days">
                 </div>
             </div>
             <div class="row">
