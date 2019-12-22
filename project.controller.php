@@ -188,5 +188,21 @@ switch ($action) {
                 $update->execute();
             }
         break;
-        
+        case "update_deliverables":
+            $pid = $_POST['pid'];
+            $deliverables = $_POST['deliverables'] ?? [];
+            $stmt = $link->prepare('DELETE FROM `deliverables` WHERE `project-id` = ?');
+            $stmt->bind_param('i', $pid);
+            $stmt->execute();
+            $stmt->close();
+            $insert = $link->prepare('INSERT INTO `deliverables` (`project-id`, `title`) VALUES (?,?)');
+            $delierable_c = null;
+            $insert->bind_param('is', $pid, $deliverable);
+            foreach ($deliverables as $deliverable) {
+                $delierable_c = $deliverable;
+                $insert->execute();
+            }
+            $insert->close();
+            header('Location: project_info.php?id=' . $pid);
+            break;
 }

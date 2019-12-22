@@ -67,20 +67,31 @@ $p_stmt->store_result();
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
-                    <label><b>Deliverables:</b></label>
-                    <ol>
-                    <?php
-                        $d_stmt = $link->prepare('SELECT `title` FROM `deliverables` WHERE `project-id` = ?');
-                        $d_stmt->bind_param('i', $pid);
-                        $d_stmt->bind_result($d_title);
-                        $d_stmt->execute();
-                        while($d_stmt->fetch()){
-                            echo "<li>{$d_title}</li>";
-                        }
-                        $d_stmt->close();
-                    ?>
-                    </ol>
+                <div class="col-3">
+                    <form action="./project.controller.php" id="d_form" method="POST">
+                        <input type="hidden" name="action" value="update_deliverables" />
+                        <input type="hidden" name="pid" value="<?=$pid?>" />
+                        <label><b>Deliverables:</b></label>
+                        <div class="input-group mb-2">
+                            <input type="text" id="deliverable_txt" class="form-control">
+                            <div class="input-group-append">
+                                <div class="btn btn-success" onclick="addDeliverables()"><b>+</b></div>
+                            </div>
+                        </div>
+                        <select multiple class="form-control" id="deliverables_dd" name="deliverables[]">
+<?php
+$d_stmt = $link->prepare('SELECT `title` FROM `deliverables` WHERE `project-id` = ?');
+$d_stmt->bind_param('i', $pid);
+$d_stmt->bind_result($d_title);
+$d_stmt->execute();
+while($d_stmt->fetch()){
+    echo "<option>{$d_title}</option>";
+}
+$d_stmt->close();
+?>
+                        </select>
+                        <button type="button" id="update" class="float-right my-2 btn btn-info">Update</button>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -106,52 +117,52 @@ $p_stmt->store_result();
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
-                        <?php
-                            $dependency_stmt = $link->prepare('SELECT `main-task` FROM `task-dependency` WHERE `dependent-task` = ?');
-                            $dependency_stmt->bind_param('i', $tid);
-                            $dependency_stmt->bind_result($main_task);
-                            while($stmt->fetch()){
-                                // Get main tasks
-                                $dependency_stmt->execute();
-                                $dependencies = array();
-                                while($dependency_stmt->fetch()){
-                                    $dependencies[] = $main_task;
-                                }
-                                $dependency_str = implode(',', $dependencies);
-                                $dependency_stmt->store_result();
-                                $members_stmt = $link->prepare('SELECT `name`, `working-hours` FROM `task-members` JOIN `member` ON `member`.`id` = `task-members`.`member-id` WHERE `task-id` = ?');
-                                $members_stmt->bind_param('i', $tid);
-                                $members_stmt->bind_result($member_name, $member_working_hours);
-                                $members_stmt->execute();
-                                $members = array();
-                                while($members_stmt->fetch()){
-                                    $members[] = $member_name . ' (' . $member_working_hours . ')';
-                                }
-                                $members_str = implode('<br />', $members);
-                                $tworking_hrs = $tworking_days * $hrs;
-                                $tactual_working_hours = $tactual_working_days * $hrs;
-                                $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
-                                $complete_str = $tis_complete ? 'Complete' : 'Pending';
-                                $tactual_working_days = $tis_complete ? $tactual_working_days : 'Pending';
-                                $alert = $tis_complete && $tactual_working_days > $tworking_days;
-                                $milestone_str = $tis_milestone ? 'YES' : 'NO';
-                                $warn_class = $alert ? 'text-danger font-weight-bold' : '';
-                                echo "
-                                    <tr class='$warn_class'>
-                                        <td>{$tid}</td>
-                                        <td>{$tname}</td>
-                                        <td>{$members_str}</td>
-                                        <td>{$tstart_date}</td>
-                                        <td>{$tend_date}</td>
-                                        <td>{$tworking_hrs}</td>
-                                        <td>{$tactual_working_hours}</td>
-                                        <td>{$dependency_str}</td>
-                                        <td>{$parent_id}</td>
-                                        <td>{$milestone_str}</td>
-                                        <td>{$complete_str}</td>
-                                        <td>{$button}</td>
-                                    </tr>
-                                ";
+<?php
+$dependency_stmt = $link->prepare('SELECT `main-task` FROM `task-dependency` WHERE `dependent-task` = ?');
+$dependency_stmt->bind_param('i', $tid);
+$dependency_stmt->bind_result($main_task);
+while($stmt->fetch()){
+    // Get main tasks
+    $dependency_stmt->execute();
+    $dependencies = array();
+    while($dependency_stmt->fetch()){
+        $dependencies[] = $main_task;
+    }
+    $dependency_str = implode(',', $dependencies);
+    $dependency_stmt->store_result();
+    $members_stmt = $link->prepare('SELECT `name`, `working-hours` FROM `task-members` JOIN `member` ON `member`.`id` = `task-members`.`member-id` WHERE `task-id` = ?');
+    $members_stmt->bind_param('i', $tid);
+    $members_stmt->bind_result($member_name, $member_working_hours);
+    $members_stmt->execute();
+    $members = array();
+    while($members_stmt->fetch()){
+        $members[] = $member_name . ' (' . $member_working_hours . ')';
+    }
+    $members_str = implode('<br />', $members);
+    $tworking_hrs = $tworking_days * $hrs;
+    $tactual_working_hours = $tactual_working_days * $hrs;
+    $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
+    $complete_str = $tis_complete ? 'Complete' : 'Pending';
+    $tactual_working_days = $tis_complete ? $tactual_working_days : 'Pending';
+    $alert = $tis_complete && $tactual_working_days > $tworking_days;
+    $milestone_str = $tis_milestone ? 'YES' : 'NO';
+    $warn_class = $alert ? 'text-danger font-weight-bold' : '';
+    echo "
+    <tr class='$warn_class'>
+        <td>{$tid}</td>
+        <td>{$tname}</td>
+        <td>{$members_str}</td>
+        <td>{$tstart_date}</td>
+        <td>{$tend_date}</td>
+        <td>{$tworking_hrs}</td>
+        <td>{$tactual_working_hours}</td>
+        <td>{$dependency_str}</td>
+        <td>{$parent_id}</td>
+        <td>{$milestone_str}</td>
+        <td>{$complete_str}</td>
+        <td>{$button}</td>
+    </tr>
+    ";
                             }
                             $stmt->close();
 
@@ -173,6 +184,25 @@ $p_stmt->store_result();
                 $.post("project.controller.php", {'action': 'set_task_complete', 'task_id': id, 'working_hours': working_hours}).done(function(data){
                     window.location.reload(true);
                 }); 
+            });
+            function addDeliverables() {
+                const value = $("#deliverable_txt").val();
+                $('#deliverables_dd').append($('<option>', {
+                    value: value,
+                    text: value,
+                    selected: true
+                }));
+                $("#deliverable_txt").val("").focus();
+            };
+            $(document).on('dblclick', '#deliverables_dd option', function(){
+                $(this).remove();
+            });
+            $("#update").click(function(){
+                // Select *
+                $("#deliverables_dd option").each(function(i, e){
+                    $(e).attr("selected", true);
+                });
+                $("#d_form").submit();
             });
 
         </script>
