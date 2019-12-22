@@ -119,16 +119,8 @@ switch ($action) {
         }
         $stmt->close();
         header('Location:Projects.php');
-    break;
-    case "plan-config":
-        $day = $_POST['day'];
-        $hrs = $_POST['hrs'];
-        $data = json_encode(array(
-            'day' => $day,
-            'hrs' => $hrs
-        ));
-        file_put_contents('plan_cfg.json', $data);
         break;
+   
     case "login":
         $username = $_POST['username'];
         $password = $_POST['password'];
@@ -145,5 +137,14 @@ switch ($action) {
         }
 
     break;
-    
+    case "plan-config":
+        $day = $_POST['day'];
+        $hrs = $_POST['hrs'];
+        $data = json_encode(array(
+            'day' => $day,
+            'hrs' => $hrs
+        ));
+        file_put_contents('plan_cfg.json', $data);
+        break;
+        
 }
