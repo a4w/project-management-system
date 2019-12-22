@@ -130,7 +130,7 @@ switch ($action) {
         $stmt->execute();
         if($stmt->fetch()) {
             $_SESSION['pm'] = $id;
-            header('Location:Projects.php);
+            header('Location:Projects.php');
         }else{
             echo "<script> alert ('invalid username or Password'); </script>";
             header('Location:login.php');
