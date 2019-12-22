@@ -5,6 +5,12 @@ error_reporting(E_ALL);
 require 'db.inc.php';
 $pid = isset($_GET['id']) ? $_GET['id'] :  0;
 
+session_start();
+
+if(!isset($_SESSION['pm']))
+    header('Location:login.php');
+$pm_id = $_SESSION['pm'];
+
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `id` = ?');
 $stmt->bind_param('i', $pid);
 $stmt->bind_result($id, $pm, $name, $hpd, $cost, $start_date, $end_date);
@@ -14,9 +20,14 @@ $stmt->close();
 
 $stmt = $link->prepare('SELECT * FROM `task` WHERE `project-id` = ?');
 $stmt->bind_param('i', $id);
-$stmt->bind_result($tid, $tname, $tstart_date, $tend_date, $tworking_hours, $parent_id, $tis_complete, $tactual_working_hours, $tis_milestone, $pid);
+$stmt->bind_result($tid, $tname, $tstart_date, $tend_date, $tworking_days, $parent_id, $tis_complete, $tactual_working_days, $tis_milestone, $pid);
 $stmt->execute();
 $stmt->store_result();
+
+$p_stmt = $link->prepare("SELECT day, `hrs-per-day` From `plan-cfg` WHERE `pm-id` = ?");
+$p_stmt->bind_param('i', $pm_id);
+$p_stmt->bind_result($day, $hrs);
+$p_stmt->execute();
 ?>
 <html>
     <head>
@@ -40,6 +51,9 @@ $stmt->store_result();
                 </div>
                 <div class="col-12">
                     <span><b>NAME:</b> <?= $name ?></span>
+                </div>
+                <div class="col-12">
+                    <span><b>Start Day:</b> <?= $day == 0? "Sunday":"Monday" ?></span>
                 </div>
                 <div class="col-12">
                     <span><b>Start date:</b> <?= $start_date ?></span>
@@ -98,8 +112,8 @@ $stmt->store_result();
                             while($stmt->fetch()){
                                 $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
                                 $complete_str = $tis_complete ? 'Complete' : 'Pending';
-                                $tactual_working_hours = $tis_complete ? $tactual_working_hours : 'Pending';
-                                $alert = $tis_complete && $tactual_working_hours > $tworking_hours;
+                                $tactual_working_days = $tis_complete ? $tactual_working_days : 'Pending';
+                                $alert = $tis_complete && $tactual_working_days > $tworking_days;
                                 $milestone_str = $tis_milestone ? 'YES' : 'NO';
                                 // Get main tasks
                                 $dependency_stmt->execute();
@@ -119,6 +133,8 @@ $stmt->store_result();
                                 }
                                 $members_str = implode('<br />', $members);
                                 $warn_class = $alert ? 'text-danger font-weight-bold' : '';
+                                $tworking_hrs = $tworking_days * $hrs;
+                                $tactual_working_hours = $tactual_working_days * $hrs;
                                 echo "
                                     <tr class='$warn_class'>
                                         <td>{$tid}</td>
@@ -126,7 +142,7 @@ $stmt->store_result();
                                         <td>{$members_str}</td>
                                         <td>{$tstart_date}</td>
                                         <td>{$tend_date}</td>
-                                        <td>{$tworking_hours}</td>
+                                        <td>{$tworking_hrs}</td>
                                         <td>{$tactual_working_hours}</td>
                                         <td>{$dependency_str}</td>
                                         <td>{$parent_id}</td>
