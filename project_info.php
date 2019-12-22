@@ -96,6 +96,7 @@ $stmt->store_result();
                                 $button = $tis_complete ? 'No Action' : "<button class='btn btn-sm btn-warning set-as-complete' data-target='{$tid}'>Set as complete</button>";
                                 $complete_str = $tis_complete ? 'Complete' : 'Pending';
                                 $tactual_working_hours = $tis_complete ? $tactual_working_hours : 'Pending';
+                                $alert = $tis_complete && $tactual_working_hours > $tworking_hours;
                                 $milestone_str = $tis_milestone ? 'YES' : 'NO';
                                 // Get main tasks
                                 $dependency_stmt->execute();
@@ -114,8 +115,9 @@ $stmt->store_result();
                                     $members[] = $member_name . ' (' . $member_working_hours . ')';
                                 }
                                 $members_str = implode('<br />', $members);
+                                $warn_class = $alert ? 'text-danger font-weight-bold' : '';
                                 echo "
-                                    <tr>
+                                    <tr class='$warn_class'>
                                         <td>{$tid}</td>
                                         <td>{$tname}</td>
                                         <td>{$members_str}</td>
