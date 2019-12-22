@@ -137,6 +137,25 @@ switch ($action) {
         }
 
     break;
+    case "check-username":
+        $username = $_POST['username'];
+        $stmt = $link->prepare("SELECT * FROM `project-managers` WHERE username = ?");
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        if ($stmt->fetch())
+            echo "EXISTS";
+        else
+            echo "ADD";
+        break;
+    case "add-manager":
+        $name = $_POST['name'];
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $stmt = $link->prepare("INSERT INTO `project-managers` (name, username, password) VALUES (?, ?, ?)");
+        $stmt->bind_param('sss', $name, $username, $password);
+        $stmt->execute();
+        header('Location:login.php');
+        break;
     case "plan-config":
         $day = $_POST['day'];
         $hrs = $_POST['hrs'];
