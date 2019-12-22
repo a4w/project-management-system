@@ -156,6 +156,19 @@ switch ($action) {
         $stmt->execute();
         header('Location:login.php');
         break;
+    case "delete-project":
+        $pid = $_POST['pid'];
+        $stmt = $link->prepare("SELECT * FROM `project` WHERE pid = ? AND pm-id = ?");
+        $stmt->bind_param('ii', $pid, $pm);
+        $stmt->execute();
+        if (!$stmt->fetch()) {
+            echo "<script> alert ('Project not found or you're not authorized to delete it'); </script>";
+        } else {
+            $stmt = $link->prepare("DELETE FROM `project` WHERE id = ?");
+            $stmt->bind_param('i', $pid);
+            $stmt->execute();
+        }
+        break;
     case "plan-config":
         $day = $_POST['day'];
         $hrs = $_POST['hrs'];

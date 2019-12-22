@@ -2,9 +2,18 @@
 ini_set('display_errors', true);
 require 'db.inc.php';
 
-$stmt = $link->prepare('SELECT * FROM `project`');
+session_start();
+
+if(!isset($_SESSION['pm']))
+    header('Location:login.php');
+$pm_id = $_SESSION['pm'];
+$pm_name = isset($_GET['pm-name']) ? $_GET['pm-name'] : 0;
+
+$stmt = $link->prepare('SELECT * FROM `project` WHERE `pm-id` = ?');
+$stmt->bind_param('i', $pm_id);
 $stmt->bind_result($id, $dummy, $name, $hpd, $cost, $start_date, $end_date);
 $stmt->execute();
+
 
 $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
 
@@ -24,11 +33,12 @@ $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <h1>Projects</h1>
+                <h1>Projects Managed by: <?= $pm_name ?> </h1>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
+                <button class="btn btn-danger float-right m-2" id="delete-project-btn">Delete Project</button>
                 <a class="btn btn-primary float-right m-2" href="add_project.php">Add Project</a>
                 <button class="btn btn-primary float-right m-2" id="add-member-btn">Add Member</button>
                 <button type="button" class="btn btn-primary float-right m-2" data-toggle="modal" data-target="#myModal">Edit Plan Config</button>
@@ -120,10 +130,19 @@ $plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
                 "member": member
             });
         });
-        $("#save").click(function(){
-            console.log("H");
-            const day = $('input[name=day]:checked').val();
-            const hrs = $("#working-hrs").val();
+        $("#delete-project-btn").click(function() {
+            const pid = prompt("Project ID");
+            $.post("project.controller.php", {
+                "action": "delete-project",
+                "pid": pid
+            }).done(function(data){
+                    window.location.reload(true);
+                }); 
+        });
+        $("#save").click(function() {
+            const day = $("#day").val;
+            const hrs = $("#working-hrs").val;
+            const pm = $("#pm").val;
             $.post("project.controller.php", {
                 "action": "plan-config",
                 "day": day,
