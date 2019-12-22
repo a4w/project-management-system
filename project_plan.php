@@ -1,5 +1,6 @@
 <?php
 require 'db.inc.php';
+ini_set('display_errors', true);
 $pid = $_GET['pid'];
 $stmt = $link->prepare('SELECT * FROM `task` WHERE `project-id` = ?');
 $stmt->bind_param('i', $pid);
@@ -11,14 +12,54 @@ $depend_stmt = $link->prepare('SELECT `main-task` FROM `task-dependency` WHERE `
 $depend_stmt->bind_param('i', $id);
 $depend_stmt->bind_result($dependency_id);
 
+$js_chart_data = '';
+while($stmt->fetch()){
+    $dependencies = array();
+    $depend_stmt->execute();
+    $depend_stmt->store_result();
+    while($depend_stmt->fetch()){
+        $dependencies[] = $dependency_id;
+    }
+    $working_hours *= 60 * 60 * 1000;
+    $percent = $is_complete === 1 ? 100 : 0;
+    $dependencies_str = implode(',', $dependencies);
+    // Detect, if dependent
+    if(count($dependencies) > 0){
+        $js_chart_data .= "['$id', '$name', null, null, $working_hours, $percent, '$dependencies_str'],";
+    }else{
+        $js_chart_data .= "['$id', '$name', new Date(Date.parse('$start_date')), null, $working_hours, $percent, ''],";
+    }
+    $js_chart_data .= PHP_EOL;
+}
+
 ?>
 <html>
     <head>
-    
+        <title>Project expected plan</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body>
-        <div id="chart"></div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Project Expected Chart</h1>
+                    <hr />
+                    <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <div id="chart"></div>
+                </div>
+                <div class="col-1"></div>
+            </div>
+        </div>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
         <script>
             google.charts.load('current', {'packages':['gantt']});
             google.charts.setOnLoadCallback(drawChart);
@@ -32,30 +73,10 @@ $depend_stmt->bind_result($dependency_id);
                 data.addColumn('number', 'Percent Complete');
                 data.addColumn('string', 'Dependencies');
 
-                data.addRows([
-<?php
-                while($stmt->fetch()){
-                    $dependencies = array();
-                    $depend_stmt->execute();
-                    $depend_stmt->store_result();
-                    while($depend_stmt->fetch()){
-                        $dependencies[] = $dependency_id;
-                    }
-                    $working_hours *= 60 * 60 * 1000;
-                    $percent = $is_complete === 1 ? 100 : 0;
-                    $dependencies_str = implode(',', $dependencies);
-                    // Detect, if dependent
-                    if(count($dependencies) > 0){
-                        echo "['$id', '$name', null, null, $working_hours, $percent, '$dependencies_str'],";
-                    }else{
-                        echo "['$id', '$name', new Date(Date.parse('$start_date')), null, $working_hours, $percent, '$dependencies_str'],";
-                    }
-                }
-?>
-                ]);
+                data.addRows([ <?= $js_chart_data ?> ]);
 
                 let options = {
-                    height: 275
+                    height: 500
                 };
 
                 let chart = new google.visualization.Gantt(document.getElementById('chart'));
