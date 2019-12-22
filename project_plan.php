@@ -43,7 +43,7 @@ while($stmt->fetch()){
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <h1>Project Expected Chart</h1>
+                    <h4>Project Expected Chart</h4>
                     <hr />
                     <br />
                 </div>

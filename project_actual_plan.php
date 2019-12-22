@@ -23,8 +23,8 @@ while($stmt->fetch()){
     $working_hours *= 60 * 60 * 1000;
     $percent = $is_complete === 1 ? 100 : 0;
     $dependencies_str = implode(',', $dependencies);
-    if($actual_working_hours === null) $actual_working_hours = $working_hours;
     $actual_working_hours *= 60 * 60 * 1000;
+    if($actual_working_hours == 0) $actual_working_hours = $working_hours;
     // Detect, if dependent
     if(count($dependencies) > 0){
         $js_chart_data .= "['$id', '$name', null, null, $actual_working_hours, $percent, '$dependencies_str'],";
@@ -45,7 +45,7 @@ while($stmt->fetch()){
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <h1>Project Actual Chart</h1>
+                    <h4>Project Actual Chart</h4>
                     <hr />
                     <br />
                 </div>
