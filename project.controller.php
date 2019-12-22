@@ -28,6 +28,31 @@ switch ($action) {
         $predecessors = $_POST['predecessors'] ?? [];
         $parent = $_POST['parent'];
         $mem_working_hours = $_POST['working_hours'] ?? [];
+        // Check parent task start and end
+        if($parent !== 'NULL'){
+            $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-hours` FROM `task` WHERE `id` = ?');
+            echo $link->error;
+            $stmt->bind_param('i', $parent);
+            $stmt->bind_result($p_start_date, $p_end_date, $p_working_hours);
+            $stmt->execute();
+            $stmt->fetch();
+            $stmt->close();
+            if(strtotime($start_date) < strtotime($p_start_date) || strtotime($end_date) > strtotime($p_end_date)){
+                echo "Sorry, the selected start and end dates are outside the parent task's range";
+                exit();
+            }
+            $stmt = $link->prepare('SELECT `working-hours` FROM `task` WHERE `parent-task-id` = ?');
+            $stmt->bind_param('i', $parent);
+            $stmt->bind_result($sibling_wh);
+            $stmt->execute();
+            $total_hours = $working_hrs;
+            while($stmt->fetch()) $total_hours += $sibling_wh;
+            $stmt->close();
+            if($total_hours > $p_working_hours){
+                echo "Sorry total hours for this task and it's siblings exceed the parent's assigned total hours";
+                exit();
+            }
+        }
         $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
         $stmt->bind_param('sssiiii', $task_name, $start_date, $end_date, $working_hrs, $parent, $milestone, $pid);
         $stmt->execute();
