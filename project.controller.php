@@ -13,7 +13,7 @@ switch ($action) {
     case 'set_task_complete':
         $tid = $_POST['task_id'];
         $wh = $_POST['working_hours'];
-        $stmt = $link->prepare('UPDATE `task` SET `is-complete` = 1, `actual-working-hours` = ? WHERE `id` = ?');
+        $stmt = $link->prepare('UPDATE `task` SET `is-complete` = 1, `actual-working-days` = ? WHERE `id` = ?');
         $stmt->bind_param('ii', $wh, $tid);
         $stmt->execute();
         break;
@@ -48,7 +48,7 @@ switch ($action) {
         }
         // Check parent task start and end
         if($parent !== 'NULL'){
-            $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-hours` FROM `task` WHERE `id` = ?');
+            $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-days` FROM `task` WHERE `id` = ?');
             echo $link->error;
             $stmt->bind_param('i', $parent);
             $stmt->bind_result($p_start_date, $p_end_date, $p_working_hours);
@@ -59,7 +59,7 @@ switch ($action) {
                 echo "Sorry, the selected start and end dates are outside the parent task's range";
                 exit();
             }
-            $stmt = $link->prepare('SELECT `working-hours` FROM `task` WHERE `parent-task-id` = ?');
+            $stmt = $link->prepare('SELECT `working-days` FROM `task` WHERE `parent-task-id` = ?');
             $stmt->bind_param('i', $parent);
             $stmt->bind_result($sibling_wh);
             $stmt->execute();
@@ -71,7 +71,7 @@ switch ($action) {
                 exit();
             }
         }
-        $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
+        $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-days`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
         $stmt->bind_param('sssiiii', $task_name, $start_date, $end_date, $working_hrs, $parent, $milestone, $pid);
         $stmt->execute();
         $tid = mysqli_insert_id($link);
