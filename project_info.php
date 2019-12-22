@@ -28,7 +28,8 @@ $p_stmt = $link->prepare("SELECT day, `hrs-per-day` From `plan-cfg` WHERE `pm-id
 $p_stmt->bind_param('i', $pm_id);
 $p_stmt->bind_result($day, $hrs);
 $p_stmt->execute();
-$p_stmt->store_result();
+$p_stmt->fetch();
+$p_stmt->close();
 ?>
 <html>
     <head>
