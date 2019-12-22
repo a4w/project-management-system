@@ -81,7 +81,7 @@ CREATE TABLE `plan-cfg` (
   `pm-id` int(11) NOT NULL,
   `day` tinyint(1) NOT NULL,
   `hrs-per-day` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
