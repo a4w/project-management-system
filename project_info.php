@@ -71,6 +71,9 @@ $stmt->store_result();
             <div class="row">
                 <div class="col-12">
                     <a class="btn btn-primary float-right m-2" href="add_task.php?pid=<?=$pid?>">Add Task</a>
+                    <a class="btn btn-success m-2" href="project_plan.php?pid=<?=$pid?>">Expected plan</a>
+                    <a class="btn btn-warning m-2" href="project_actual_plan.php?pid=<?=$pid?>">Actual plan</a>
+                    <a class="btn btn-dark m-2" href="project_charts.php?pid=<?=$pid?>">Comapre</a>
                 </div>
                 <div class="col-12">
                     <table class="table">
