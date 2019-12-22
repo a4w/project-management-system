@@ -135,7 +135,6 @@ switch ($action) {
             echo "<script> alert ('invalid username or Password'); </script>";
             header('Location:login.php');
         }
-
     break;
     case "check-username":
         $username = $_POST['username'];
@@ -169,14 +168,22 @@ switch ($action) {
             $stmt->execute();
         }
         break;
-    case "plan-config":
-        $day = $_POST['day'];
-        $hrs = $_POST['hrs'];
-        $data = json_encode(array(
-            'day' => $day,
-            'hrs' => $hrs
-        ));
-        file_put_contents('plan_cfg.json', $data);
+        case "plan-config":
+            $day = $_POST['day'];
+            $hrs = $_POST['hrs'];
+            $stmt = $link->prepare("SELECET day, `hrs-per-day` FROM `plan-cfg` WHERE `pm-id` = ? ");
+            $stmt->bind_param('i', $pm);
+            $stmt->bind_result($d, $h);
+            $stmt->execute();
+            if(!$stmt->fetch()){
+                $insert = $link->prepare("INSERT INTO `plan-cfg` (`pm-id`, day, `hrs-per-day`) VALUES (?, ?, ?)");
+                $insert->bind_param('iii',$pm, $day, $hrs);
+                $insert->execute();
+            }else{
+                $update = $link->prepare("UPDATE `plan-cfg` SET `day` = ?, `hrs-per-day` = ?  WHERE `pm-id` = ?");
+                $update->bind_param('iii', $day, $hrs, $pm);
+                $update->execute();
+            }
         break;
         
 }
