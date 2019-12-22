@@ -1,8 +1,13 @@
 <?php
 require 'db.inc.php';
 ini_set('display_errors', true);
+session_start();
 
 $action = isset($_POST['action']) ? $_POST['action'] : null;
+
+if(!isset($_SESSION['pm']) && $action != 'login')
+    header('Location:login.php');
+$pm = $_SESSION['pm'];
 
 switch ($action) {
     case 'set_task_complete':
@@ -96,7 +101,7 @@ switch ($action) {
         $HoursperDay = $_POST["HoursperDay"];
         $titles = $_POST['titles'] ?? [];
         // TODO: Use prepared statement or atleast escape input
-        $sql = "INSERT INTO project (`name`, `hours-per-day`, `cost`, `start-date`, `end-date`, `pm-id`) VALUES ('$name','$HoursperDay','$Cost', '$StartDate', '$EndDate', '1')";
+        $sql = "INSERT INTO project (`name`, `hours-per-day`, `cost`, `start-date`, `end-date`, `pm-id`) VALUES ('$name','$HoursperDay','$Cost', '$StartDate', '$EndDate', '$pm')";
         mysqli_query($link, $sql);
         $id = mysqli_insert_id($link);
         foreach ($deliverables as $deliverable) {
@@ -114,14 +119,31 @@ switch ($action) {
         }
         $stmt->close();
         header('Location:Projects.php');
+    break;
+    case "plan-config":
+        $day = $_POST['day'];
+        $hrs = $_POST['hrs'];
+        $data = json_encode(array(
+            'day' => $day,
+            'hrs' => $hrs
+        ));
+        file_put_contents('plan_cfg.json', $data);
         break;
-        case "plan-config":
-            $day = $_POST['day'];
-            $hrs = $_POST['hrs'];
-            $data = json_encode(array(
-                'day' => $day,
-                'hrs' => $hrs
-            ));
-            file_put_contents('plan_cfg.json', $data);
-        break;
+    case "login":
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $stmt = $link->prepare("SELECT id, name FROM `project-managers` WHERE username = ? AND password = ?");
+        $stmt->bind_param('ss', $username, $password);
+        $stmt->bind_result($id, $name);
+        $stmt->execute();
+        if($stmt->fetch()) {
+            $_SESSION['pm'] = $id;
+            header('Location:Projects.php?pm-name='.$name);
+        }else{
+            echo "<script> alert ('invalid username or Password'); </script>";
+            header('Location:login.php');
+        }
+
+    break;
+    
 }
