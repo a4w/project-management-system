@@ -105,20 +105,10 @@ switch ($action) {
         case "plan-config":
             $day = $_POST['day'];
             $hrs = $_POST['hrs'];
-            $pm = $_POST['pm'];
-
-            /*$stmt = $link->prepare("SELECET * FROM `plan-config` WHERE day = ? AND t-hrs = ?");
-            $stmt->bind_param('si', $day, $hrs);
-            $stmt->bind_result($id, $d, $h);
-            $stmt->execute();
-            if(!$stmt->fetch()){
-                $insert = $link->prepare("INSERT INTO `plan-config` (day, t-hrs) VALUES (?, ?)");
-                $insert->bind_param('si', $day, $hrs);
-                $insert->execute();
-                $id = mysqli_insert_id($link);
-            }
-            $update = $link->prepare("UPDATE `project` SET plan-id = ? WHERE pm-id = ?");
-            $update->bind_param('ii', $id, $pm);
-            $update->execute();*/
+            $data = json_encode(array(
+                'day' => $day,
+                'hrs' => $hrs
+            ));
+            file_put_contents('plan_cfg.json', $data);
         break;
 }

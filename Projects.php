@@ -6,6 +6,8 @@ $stmt = $link->prepare('SELECT * FROM `project`');
 $stmt->bind_result($id, $dummy, $name, $hpd, $cost, $start_date, $end_date);
 $stmt->execute();
 
+$plan_cfg = json_decode(file_get_contents('plan_cfg.json'), true);
+
 ?>
 <html>
 
@@ -34,26 +36,24 @@ $stmt->execute();
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title">Plan Configration</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                                <form action="project.controller.php" method="POST" class="form">
-                                    <input type="hidden" id="pm" value="<?= $pm_id ?>">
-                                    <div class="form-group">
-                                        <label class="col-4 control-label">Start Day: </label>
-                                        <div class="col">
-                                            <input type="radio" name="day" id="day" value="0"> Sunday
-                                            <input type="radio" name="day" id="day" value="1"> Monday
-                                        </div>
+                                <input type="hidden" id="pm" value="<?= $pm_id ?>">
+                                <div class="form-group">
+                                    <label class="col-4 control-label">Start Day: </label>
+                                    <div class="col">
+                                        <input type="radio" <?= $plan_cfg['day'] == 0 ? 'checked' : '' ?> name="day" value="0"> Sunday
+                                        <input type="radio" <?= $plan_cfg['day'] == 1 ? 'checked' : '' ?> name="day" value="1"> Monday
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col control-label">Working Hours Per Day: </label>
-                                        <div class="col">
-                                            <input type="number" name="working-hrs" id="working-hrs" min="1" class="form-control">
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col control-label">Working Hours Per Day: </label>
+                                    <div class="col">
+                                        <input type="number" name="working-hrs" value="<?=$plan_cfg['hrs']?>" id="working-hrs" min="1" class="form-control">
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="save">Save</button>
@@ -120,17 +120,14 @@ $stmt->execute();
                 "member": member
             });
         });
-        $(document).ready(function() {
-            $("#save").click(function(){
-                const day = $("#day").val;
-                const hrs = $("#working-hrs").val;
-                const pm = $("#pm").val;
-                $.post("project.controller.php", {
+        $("#save").click(function(){
+            console.log("H");
+            const day = $('input[name=day]:checked').val();
+            const hrs = $("#working-hrs").val();
+            $.post("project.controller.php", {
                 "action": "plan-config",
                 "day": day,
                 "hrs": hrs,
-                "pm": pm
-                });
             });
         });
     </script>
