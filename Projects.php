@@ -7,7 +7,13 @@ session_start();
 if(!isset($_SESSION['pm']))
     header('Location:login.php');
 $pm_id = $_SESSION['pm'];
-$pm_name = isset($_GET['pm-name']) ? $_GET['pm-name'] : 0;
+
+$stmt = $link->prepare('SELECT `name` FROM `project-managers` WHERE `id` = ? ');
+$stmt->bind_param('i', $pm_id);
+$stmt->bind_result($pm_name);
+$stmt->execute();
+$stmt->fetch();
+$stmt->close();
 
 $stmt = $link->prepare('SELECT * FROM `project` WHERE `pm-id` = ?');
 $stmt->bind_param('i', $pm_id);
