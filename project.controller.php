@@ -1,19 +1,14 @@
 <?php
 require 'db.inc.php';
 ini_set('display_errors', true);
-session_start();
 
 $action = isset($_POST['action']) ? $_POST['action'] : null;
-
-if(!isset($_SESSION['pm']) && $action != 'login')
-    header('Location:login.php');
-$pm = $_SESSION['pm'];
 
 switch ($action) {
     case 'set_task_complete':
         $tid = $_POST['task_id'];
         $wh = $_POST['working_hours'];
-        $stmt = $link->prepare('UPDATE `task` SET `is-complete` = 1, `actual-working-days` = ? WHERE `id` = ?');
+        $stmt = $link->prepare('UPDATE `task` SET `is-complete` = 1, `actual-working-hours` = ? WHERE `id` = ?');
         $stmt->bind_param('ii', $wh, $tid);
         $stmt->execute();
         break;
@@ -48,7 +43,7 @@ switch ($action) {
         }
         // Check parent task start and end
         if($parent !== 'NULL'){
-            $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-days` FROM `task` WHERE `id` = ?');
+            $stmt = $link->prepare('SELECT `start-date`, `end-date`, `working-hours` FROM `task` WHERE `id` = ?');
             echo $link->error;
             $stmt->bind_param('i', $parent);
             $stmt->bind_result($p_start_date, $p_end_date, $p_working_hours);
@@ -59,7 +54,7 @@ switch ($action) {
                 echo "Sorry, the selected start and end dates are outside the parent task's range";
                 exit();
             }
-            $stmt = $link->prepare('SELECT `working-days` FROM `task` WHERE `parent-task-id` = ?');
+            $stmt = $link->prepare('SELECT `working-hours` FROM `task` WHERE `parent-task-id` = ?');
             $stmt->bind_param('i', $parent);
             $stmt->bind_result($sibling_wh);
             $stmt->execute();
@@ -71,7 +66,7 @@ switch ($action) {
                 exit();
             }
         }
-        $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-days`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
+        $stmt = $link->prepare('INSERT INTO `task` (`name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-milestone`, `project-id`) VALUES (?,?,?,?,NULLIF(?,0),?,?)');
         $stmt->bind_param('sssiiii', $task_name, $start_date, $end_date, $working_hrs, $parent, $milestone, $pid);
         $stmt->execute();
         $tid = mysqli_insert_id($link);
@@ -101,7 +96,7 @@ switch ($action) {
         $HoursperDay = $_POST["HoursperDay"];
         $titles = $_POST['titles'] ?? [];
         // TODO: Use prepared statement or atleast escape input
-        $sql = "INSERT INTO project (`name`, `hours-per-day`, `cost`, `start-date`, `end-date`, `pm-id`) VALUES ('$name','$HoursperDay','$Cost', '$StartDate', '$EndDate', '$pm')";
+        $sql = "INSERT INTO project (`name`, `hours-per-day`, `cost`, `start-date`, `end-date`, `pm-id`) VALUES ('$name','$HoursperDay','$Cost', '$StartDate', '$EndDate', '1')";
         mysqli_query($link, $sql);
         $id = mysqli_insert_id($link);
         foreach ($deliverables as $deliverable) {
@@ -172,38 +167,10 @@ switch ($action) {
         case "plan-config":
             $day = $_POST['day'];
             $hrs = $_POST['hrs'];
-            $stmt = $link->prepare("SELECT day, `hrs-per-day` FROM `plan-cfg` WHERE `pm-id` = ? ");
-            $stmt->bind_param('i', $pm);
-            $stmt->bind_result($d, $h);
-            $stmt->execute();
-            if(!$stmt->fetch()){
-                $stmt->close();
-                $insert = $link->prepare("INSERT INTO `plan-cfg` (`pm-id`, day, `hrs-per-day`) VALUES (?, ?, ?)");
-                $insert->bind_param('iii',$pm, $day, $hrs);
-                $insert->execute();
-            }else{
-                $stmt->close();
-                $update = $link->prepare("UPDATE `plan-cfg` SET `day` = ?, `hrs-per-day` = ?  WHERE `pm-id` = ?");
-                echo $link->error;
-                $update->bind_param('iii', $day, $hrs, $pm);
-                $update->execute();
-            }
+            $data = json_encode(array(
+                'day' => $day,
+                'hrs' => $hrs
+            ));
+            file_put_contents('plan_cfg.json', $data);
         break;
-        case "update_deliverables":
-            $pid = $_POST['pid'];
-            $deliverables = $_POST['deliverables'] ?? [];
-            $stmt = $link->prepare('DELETE FROM `deliverables` WHERE `project-id` = ?');
-            $stmt->bind_param('i', $pid);
-            $stmt->execute();
-            $stmt->close();
-            $insert = $link->prepare('INSERT INTO `deliverables` (`project-id`, `title`) VALUES (?,?)');
-            $delierable_c = null;
-            $insert->bind_param('is', $pid, $deliverable);
-            foreach ($deliverables as $deliverable) {
-                $delierable_c = $deliverable;
-                $insert->execute();
-            }
-            $insert->close();
-            header('Location: project_info.php?id=' . $pid);
-            break;
 }
