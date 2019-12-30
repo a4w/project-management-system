@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 21, 2019 at 02:33 PM
+-- Generation Time: Dec 22, 2019 at 07:52 PM
 -- Server version: 8.0.17
 -- PHP Version: 7.3.10
 
@@ -40,7 +40,9 @@ CREATE TABLE `deliverables` (
 
 INSERT INTO `deliverables` (`id`, `project-id`, `title`) VALUES
 (3, 1, 'software Program'),
-(4, 1, 'Training Plan');
+(4, 1, 'Training Plan'),
+(5, 4, 'kill self'),
+(6, 4, 'die');
 
 -- --------------------------------------------------------
 
@@ -59,7 +61,27 @@ CREATE TABLE `member` (
 
 INSERT INTO `member` (`id`, `name`) VALUES
 (1, 'Sara Samer'),
-(2, 'Ahmed Wessam');
+(2, 'Ahmed Wessam'),
+(3, ''),
+(4, ''),
+(5, ''),
+(6, ''),
+(7, ''),
+(8, ''),
+(9, ''),
+(10, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `plan-cfg`
+--
+
+CREATE TABLE `plan-cfg` (
+  `pm-id` int(11) NOT NULL,
+  `day` tinyint(1) NOT NULL,
+  `hrs-per-day` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -82,7 +104,8 @@ CREATE TABLE `project` (
 --
 
 INSERT INTO `project` (`id`, `pm-id`, `name`, `hours-per-day`, `cost`, `start-date`, `end-date`) VALUES
-(1, 1, 'Project - 1', 5, 10000000, '2019-12-01', '2019-12-09');
+(1, 1, 'Project - 1', 5, 10000000, '2019-12-01', '2019-12-09'),
+(4, 1, 'Project 2', 10, 300000, '2019-12-01', '2019-12-31');
 
 -- --------------------------------------------------------
 
@@ -103,7 +126,8 @@ CREATE TABLE `project-managers` (
 
 INSERT INTO `project-managers` (`id`, `name`, `username`, `password`) VALUES
 (1, 'Sara', 'Admin', '1234'),
-(2, 'Ahmed', 'user', '123123');
+(2, 'Ahmed', 'user', '123123'),
+(3, 'Salma', 'root', '12341234');
 
 -- --------------------------------------------------------
 
@@ -117,6 +141,14 @@ CREATE TABLE `project-member-titles` (
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Dumping data for table `project-member-titles`
+--
+
+INSERT INTO `project-member-titles` (`project-id`, `member-id`, `title`) VALUES
+(4, 1, 'CIO'),
+(4, 2, 'CEO');
+
 -- --------------------------------------------------------
 
 --
@@ -128,10 +160,10 @@ CREATE TABLE `task` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `start-date` date NOT NULL,
   `end-date` date NOT NULL,
-  `working-hours` int(11) NOT NULL DEFAULT '0',
+  `working-days` int(11) NOT NULL DEFAULT '0',
   `parent-task-id` int(11) DEFAULT NULL,
   `is-complete` tinyint(1) NOT NULL DEFAULT '0',
-  `actual-working-hours` int(11) NOT NULL DEFAULT '0',
+  `actual-working-days` int(11) NOT NULL DEFAULT '0',
   `is-milestone` tinyint(1) NOT NULL DEFAULT '0',
   `project-id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -140,9 +172,10 @@ CREATE TABLE `task` (
 -- Dumping data for table `task`
 --
 
-INSERT INTO `task` (`id`, `name`, `start-date`, `end-date`, `working-hours`, `parent-task-id`, `is-complete`, `actual-working-hours`, `is-milestone`, `project-id`) VALUES
-(1, 'Task A', '2019-12-11', '2019-12-18', 20, NULL, 0, 0, 0, 1),
-(2, 'Task B', '2019-12-02', '2019-12-09', 3, NULL, 0, 0, 0, 1);
+INSERT INTO `task` (`id`, `name`, `start-date`, `end-date`, `working-days`, `parent-task-id`, `is-complete`, `actual-working-days`, `is-milestone`, `project-id`) VALUES
+(1, 'Task A', '2019-12-11', '2019-12-18', 20, NULL, 1, 10, 0, 1),
+(2, 'Task B', '2019-12-02', '2019-12-09', 3, NULL, 1, 30, 0, 1),
+(3, 'Task A', '2019-12-04', '2019-12-24', 470, NULL, 0, 0, 0, 4);
 
 -- --------------------------------------------------------
 
@@ -173,7 +206,8 @@ CREATE TABLE `task-members` (
 
 INSERT INTO `task-members` (`task-id`, `member-id`, `working-hours`) VALUES
 (2, 1, 0),
-(2, 2, 0);
+(2, 2, 0),
+(3, 1, 10);
 
 --
 -- Indexes for dumped tables
@@ -191,6 +225,12 @@ ALTER TABLE `deliverables`
 --
 ALTER TABLE `member`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `plan-cfg`
+--
+ALTER TABLE `plan-cfg`
+  ADD UNIQUE KEY `pm-id` (`pm-id`);
 
 --
 -- Indexes for table `project`
@@ -243,31 +283,31 @@ ALTER TABLE `task-members`
 -- AUTO_INCREMENT for table `deliverables`
 --
 ALTER TABLE `deliverables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `project-managers`
 --
 ALTER TABLE `project-managers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -278,6 +318,12 @@ ALTER TABLE `task`
 --
 ALTER TABLE `deliverables`
   ADD CONSTRAINT `pid-delivery` FOREIGN KEY (`project-id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `plan-cfg`
+--
+ALTER TABLE `plan-cfg`
+  ADD CONSTRAINT `pm-plan` FOREIGN KEY (`pm-id`) REFERENCES `project-managers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `project`
