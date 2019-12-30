@@ -157,12 +157,13 @@ switch ($action) {
         break;
     case "delete-project":
         $pid = $_POST['pid'];
-        $stmt = $link->prepare("SELECT * FROM `project` WHERE pid = ? AND pm-id = ?");
+        $stmt = $link->prepare("SELECT * FROM `project` WHERE id = ? AND `pm-id` = ?");
         $stmt->bind_param('ii', $pid, $pm);
         $stmt->execute();
         if (!$stmt->fetch()) {
             echo "<script> alert ('Project not found or you're not authorized to delete it'); </script>";
         } else {
+			$stmt->close();
             $stmt = $link->prepare("DELETE FROM `project` WHERE id = ?");
             $stmt->bind_param('i', $pid);
             $stmt->execute();
